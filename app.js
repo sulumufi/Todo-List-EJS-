@@ -57,9 +57,11 @@ app.post("/", function (req, res) {
     }
     else{
         List.findOne({name: listTitle}, function(err,  found_list){
-            found_list.items.push(item_new);
+            if(!err){
+                found_list.items.push(item_new);
             found_list.save();
             res.redirect("/"+listTitle)
+            }
 
         })
 
@@ -164,7 +166,7 @@ app.get("/:temp_list", function (req, res) {
 
     List.findOne({name : customListName},function(err, found_list){
         if(err){
-            console.log(ere);
+            console.log(err);
         }
         else{
             if(!found_list){
@@ -207,7 +209,7 @@ app.get("/about", function (req, res) {
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 8000;
+  port = 3000;
 }
 
 
