@@ -7,9 +7,6 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 
 
-const date = require(__dirname + "/date.js")
-console.log(date);
-
 const app = express();
 
 mongoose.connect("mongodb+srv://admin:admin@cluster0.bibps.mongodb.net/todolistDB", {
@@ -44,8 +41,6 @@ app.post("/", function (req, res) {
     let itemName = req.body.text_info;
     let listTitle = req.body.list
 
-    console.log("------------------------------"+itemName, listTitle);
-
     const item_new = new Item({
         name : itemName
     }) 
@@ -64,17 +59,13 @@ app.post("/", function (req, res) {
             }
 
         })
-
-        
     }
-
 })
 
 
 app.post("/delete", function(req, res){
     const delete_id = req.body.checkbox;
-    const listTitle = req.body.listTitle;
-    console.log("................................................................"+delete_id,listTitle);
+    const listTitle = req.body.listTitle; 
 
 
 
@@ -84,9 +75,9 @@ app.post("/delete", function(req, res){
                 console.log(err);
             }
             else{
-                console.log("deleted--------------------------------");
+                console.log("deleted");
             }
-        });
+        }, {useFindAndModify: false});
     
         res.redirect("/");
     }
@@ -97,7 +88,7 @@ app.post("/delete", function(req, res){
                 console.log("successfully deleted");
                 res.redirect("/"+listTitle);
             }
-        })
+        }, {useFindAndModify: false})
     }
     
 })
@@ -119,17 +110,11 @@ const defaultItems = [ item1, item2, item3];
 
 app.get("/", function (req, res) {
 
-    // day = date.getDate();
-
-    console.log("ye!");
-
     Item.find(function(err, itemsFound){
         if(err){
             console.log(err);
         }
         else{
-            console.log(itemsFound);
-
             if(itemsFound.length === 0){
 
                 Item.insertMany(
@@ -182,9 +167,6 @@ app.get("/:temp_list", function (req, res) {
 
             }
             else{
-                console.log("exists");
-                console.log(found_list);
-
                 res.render("list", {
                     listTitle: found_list.name,
                     textSent: found_list.items
@@ -196,18 +178,14 @@ app.get("/:temp_list", function (req, res) {
     
 })
 
-// app.post("/work", function(req, res){
-//     let item = req.body.text_info;
-//     workItems.push(item);
-//     res.redirect("/work")
-// })
 
 app.get("/about", function (req, res) {
     res.render("about");
 })
 
 
-let port = process.env.PORT;
+// let port = process.env.PORT;
+let port = "";
 if (port == null || port == "") {
   port = 3000;
 }
